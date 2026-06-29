@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import entity.Cover;
+import entity.Enemy;
 import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -29,7 +30,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int SCREEN_COVERS_BUFFER = 260;
     final int START_X_COVERS = SCREEN_COVERS_BUFFER / 2;
     List<Cover> covers = new ArrayList<Cover>();
-    //Cover cover1 = new Cover(this, 100, player.y - 70, 9, 4, 10);
+
+    Enemy testEnemy = new Enemy(this, START_X_COVERS, 0, 2, 50);
 
     public void initBg() {
         try {
@@ -99,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
             cover.draw(g2);
         }
         player.draw(g2);
+        testEnemy.draw(g2);
 
         g2.dispose();
     }

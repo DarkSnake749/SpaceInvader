@@ -14,8 +14,10 @@ public class Blocker extends Entity {
 
     public Blocker(GamePanel gp, int posX, int posY, int size) {
         this.gp = gp;
+
         this.x = posX;
         this.y = posY;
+        
         this.width = size;
         this.height = size;
     }

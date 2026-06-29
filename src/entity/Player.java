@@ -27,7 +27,6 @@ public class Player extends Entity {
         this.keyH = keyH;
 
         init();
-
     }
 
     public void init() {
