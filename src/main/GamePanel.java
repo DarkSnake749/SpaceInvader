@@ -7,13 +7,17 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Player;
+
 public class GamePanel extends JPanel implements Runnable {
-    final int SCREEN_WIDTH = 1080;
-    final int SCREEN_HEIGHT = 720;
+    public final int SCREEN_WIDTH = 1080;
+    public final int SCREEN_HEIGHT = 720;
 
     KeyHandler keyH = new KeyHandler();
     Clock clockH = new Clock();
     Thread gameThread;
+
+    Player player = new Player(this, keyH);
 
     // Player
     int playerX = 100;
@@ -51,26 +55,15 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (keyH.up) {
-            playerY -= playerSpeed;
-        }
-        if (keyH.down) {
-            playerY += playerSpeed;
-        }
-        if (keyH.left) {
-            playerX -= playerSpeed;
-        }
-        if (keyH.right) {
-            playerX += playerSpeed;
-        }
+        player.update();
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, 40, 40);
+        player.draw(g2);
+
         g2.dispose();
     }
 
