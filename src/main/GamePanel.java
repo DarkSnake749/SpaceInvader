@@ -26,12 +26,12 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     Player player = new Player(this, keyH);
-    List<Bullet> bullets = new ArrayList<Bullet>(1);
+    List<Bullet> bullets = new ArrayList<Bullet>(0);
 
-    // Player
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    // Shooting timing
+    final int SHOOTING_STEP = 50;
+    int currentShootingStep = 0;
+    boolean shot = false;
 
     public void init_bg() {
         try {
@@ -85,9 +85,16 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         player.update();
-        if (player.shoot) {
+        if (player.shoot && !shot) {
             bullets.add(
                 new Bullet(this, player.x + player.width / 2, player.y));
+            shot = true;
+            currentShootingStep = 0;
+        }
+
+        if (shot) {
+            currentShootingStep++;
+            shot = (currentShootingStep >= SHOOTING_STEP) ? false : true;
         }
     }
 
