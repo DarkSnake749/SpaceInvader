@@ -7,17 +7,12 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Entity {
-    int x, y;
+    public int x, y, width, height;
     int speed;
 
     public BufferedImage sprite1, sprite2;
 
     public void loadImage(String path, int sprite) {
-        System.out.println("Loading: " + path);
-
-        var stream = getClass().getResourceAsStream(path);
-        System.out.println("Stream = " + stream);
-
         try {
             if (sprite == 1) {
                 sprite1 = ImageIO.read(getClass().getResourceAsStream(path));
@@ -29,6 +24,14 @@ public class Entity {
             System.err.println("Wasn't able to load resource at " + path);
             e.printStackTrace();
         }
+    }
+
+    public int bottom() {
+        return y + height;
+    }
+
+    public int right() {
+        return x + width;
     }
 
     public void update() {

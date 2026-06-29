@@ -11,7 +11,7 @@ public class Player extends Entity {
 
     int startPosX;
     int startPosY;
-    boolean shoot;
+    public boolean shoot;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -31,16 +31,21 @@ public class Player extends Entity {
         speed = 3;
 
         loadImage("/images/ship.png", 1);
+
+        width = sprite1.getWidth();
+        height = sprite1.getHeight();
     }
 
-    public void movement() {
+    public void behavior() {
         if (keyH.left) { x -= speed; }
         if (keyH.right) { x += speed; }
+
         if (keyH.shoot) { shoot = true; }
+        else { shoot = false; }
     }
 
     public void update() {
-        movement();
+        behavior();
     }
 
     @Override

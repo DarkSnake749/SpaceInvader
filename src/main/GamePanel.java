@@ -1,5 +1,7 @@
 package main;
 
+import java.util.*;
+
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -10,6 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import entity.Bullet;
 import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -23,6 +26,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
 
     Player player = new Player(this, keyH);
+    List<Bullet> bullets = new ArrayList<Bullet>(1);
 
     // Player
     int playerX = 100;
@@ -69,7 +73,22 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet bullet = bullets.get(i);
+            bullet.update();
+
+            if (bullet.y + bullet.height < 0) { 
+                bullets.remove(i); 
+                continue;
+            }
+            bullets.set(i, bullet);
+        }
+
         player.update();
+        if (player.shoot) {
+            bullets.add(
+                new Bullet(this, player.x + player.width / 2, player.y));
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -78,6 +97,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (bgImg != null) {
             g2.drawImage(bgImg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
+        }
+
+        for (Bullet bullet : bullets) {
+            bullet.draw(g2);
         }
 
         player.draw(g2);
