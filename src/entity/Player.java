@@ -54,6 +54,7 @@ public class Player extends Entity {
     }
 
     public void check_collisions(List<Cover> covers) {
+        /* 
         for (Cover cover : covers) {
         for (Blocker blocker : cover.blockers) {
         for (int i = 0; i < bullets.size(); i++) {
@@ -66,6 +67,25 @@ public class Player extends Entity {
                 break;
             }
         }
+        }
+        } */
+
+        for (int i = 0; i < bullets.size(); i++) {
+            Bullet bullet = bullets.get(i);
+        for (Cover cover : covers) {
+            if (
+                bullet.x < cover.x || 
+                bullet.x > cover.x + cover.width * cover.size
+            ) { continue; }
+        for (Blocker blocker : cover.blockers) {
+            if (
+                bullet.y >= blocker.y && bullet.y <= blocker.bottom() &&
+                bullet.x >= blocker.x && bullet.x <= blocker.right()
+            ) { 
+                bullets.remove(i);
+                break;
+            }
+            }
         }
         }
     }

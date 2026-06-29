@@ -7,9 +7,9 @@ import main.GamePanel;
 
 public class Cover extends Entity {
     GamePanel gp;
+    
     public List<Blocker> blockers = new ArrayList<Blocker>();
-
-    int size;
+    public int size;
 
     public Cover (GamePanel gp, int posX, int posY, int width, int height, int size) {
         this.gp = gp;
