@@ -11,12 +11,15 @@ public class GamePanel extends JPanel implements Runnable {
     final int SCREEN_WIDTH = 1080;
     final int SCREEN_HEIGHT = 720;
 
+    KeyHandler keyH = new KeyHandler();
     Thread gameThread;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
+        this.addKeyListener(keyH);
+        this.setFocusable(true);
     }
 
     public void startGameThread() {
@@ -41,6 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
         
         g2.setColor(Color.white);
         g2.fillRect(100, 100, 40, 40);
+        g2.dispose();
     }
 
 }
