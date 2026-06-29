@@ -6,10 +6,12 @@ import main.GamePanel;
 
 public class Bullet extends Entity {
     GamePanel gp;
+    public int id;
 
-    public Bullet(GamePanel gp, int startX, int startY) {
+    public Bullet(GamePanel gp, int startX, int startY, int id) {
         this.x = startX;
         this.y = startY;
+        this.id = id;
 
         init();
     }

@@ -34,9 +34,6 @@ public class Entity {
         return x + width;
     }
 
-    public void update() {
-    }
-
     public void draw(Graphics2D g2) {
     }
 }

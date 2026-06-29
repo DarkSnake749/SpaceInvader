@@ -12,7 +12,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import entity.Bullet;
+import entity.Cover;
 import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -24,20 +24,26 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Clock clockH = new Clock();
     Thread gameThread;
-
     Player player = new Player(this, keyH);
-    List<Bullet> bullets = new ArrayList<Bullet>(0);
 
-    // Shooting timing
-    final int SHOOTING_STEP = 50;
-    int currentShootingStep = 0;
-    boolean shot = false;
+    final int SCREEN_COVERS_BUFFER = 260;
+    final int START_X_COVERS = SCREEN_COVERS_BUFFER / 2;
+    List<Cover> covers = new ArrayList<Cover>();
+    //Cover cover1 = new Cover(this, 100, player.y - 70, 9, 4, 10);
 
-    public void init_bg() {
+    public void initBg() {
         try {
             bgImg = ImageIO.read(getClass().getResourceAsStream("/images/background.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void initCovers(int numOfCover) {
+        final int STEP = SCREEN_WIDTH / numOfCover;
+        for (int i = 0; i < numOfCover; i++) {
+            covers.add(
+                new Cover(this, i * STEP + START_X_COVERS, player.y - 70, 9, 4, 10));
         }
     }
 
@@ -48,7 +54,8 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
-        init_bg();
+        initBg();
+        initCovers(3);
     }
 
     public void startGameThread() {
@@ -73,29 +80,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        for (int i = 0; i < bullets.size(); i++) {
-            Bullet bullet = bullets.get(i);
-            bullet.update();
-
-            if (bullet.y + bullet.height < 0) { 
-                bullets.remove(i); 
-                continue;
-            }
-            bullets.set(i, bullet);
+        for (Cover cover : covers) {
+            cover.update(player.bullets);
         }
 
-        player.update();
-        if (player.shoot && !shot) {
-            bullets.add(
-                new Bullet(this, player.x + player.width / 2, player.y));
-            shot = true;
-            currentShootingStep = 0;
-        }
-
-        if (shot) {
-            currentShootingStep++;
-            shot = (currentShootingStep >= SHOOTING_STEP) ? false : true;
-        }
+        player.update(covers);
     }
 
     public void paintComponent(Graphics g) {
@@ -106,10 +95,9 @@ public class GamePanel extends JPanel implements Runnable {
             g2.drawImage(bgImg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
         }
 
-        for (Bullet bullet : bullets) {
-            bullet.draw(g2);
+        for (Cover cover : covers) {
+            cover.draw(g2);
         }
-
         player.draw(g2);
 
         g2.dispose();
