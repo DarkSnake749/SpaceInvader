@@ -4,11 +4,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;;
 
 public class KeyHandler implements KeyListener {
-    public boolean up, down, left, right;
+    public boolean left, right, shoot;
 
     @Override
     public void keyTyped(KeyEvent e) {
-
     }
 
     @Override
@@ -25,17 +24,17 @@ public class KeyHandler implements KeyListener {
     }
 
     private void setKeyValues(int keyCode, boolean value) {
-        if (keyCode == KeyEvent.VK_W) {
-            up = value;
-        }
-        if (keyCode == KeyEvent.VK_S) {
-            down = value;
-        }
-        if (keyCode == KeyEvent.VK_A) {
+        if (keyCode == KeyEvent.VK_A || keyCode == KeyEvent.VK_LEFT) {
             left = value;
         }
-        if (keyCode == KeyEvent.VK_D) {
+        if (keyCode == KeyEvent.VK_D || keyCode == KeyEvent.VK_RIGHT) {
             right = value;
+        }
+        if (
+            keyCode == KeyEvent.VK_W  ||
+            keyCode == KeyEvent.VK_UP ||
+            keyCode == KeyEvent.VK_SPACE) {
+                shoot = value;
         }
     }
 }
