@@ -31,6 +31,14 @@ public class GamePanel extends JPanel implements Runnable {
     int playerY = 100;
     int playerSpeed = 4;
 
+    public void init_bg() {
+        try {
+            bgImg = ImageIO.read(getClass().getResourceAsStream("/images/background.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public GamePanel() {
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
@@ -64,14 +72,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
         player.update();
-    }
-
-    public void init_bg() {
-        try {
-            bgImg = ImageIO.read(getClass().getResourceAsStream("/images/background.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void paintComponent(Graphics g) {
