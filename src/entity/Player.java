@@ -53,8 +53,6 @@ public class Player extends Entity {
     }
 
     public void checkCollisions(List<Cover> covers, List<Enemy> enemies) {
-        boolean nextBullet = false;
-
         for (int i = 0; i < bullets.size(); i++) {
             Bullet bullet = bullets.get(i);
             if (bullet.checkCollisions(covers, enemies)) { bullets.remove(i); }
