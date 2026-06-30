@@ -52,33 +52,21 @@ public class Player extends Entity {
         else { shoot = false; }
     }
 
-    public void check_collisions(List<Cover> covers) {
+    public void checkCollisions(List<Cover> covers, List<Enemy> enemies) {
+        boolean nextBullet = false;
+
         for (int i = 0; i < bullets.size(); i++) {
             Bullet bullet = bullets.get(i);
-        for (Cover cover : covers) {
-            if (
-                bullet.x < cover.x || 
-                bullet.x > cover.x + cover.width * cover.size
-            ) { continue; }
-        for (Blocker blocker : cover.blockers) {
-            if (
-                bullet.y >= blocker.y && bullet.y <= blocker.bottom() &&
-                bullet.x >= blocker.x && bullet.x <= blocker.right()
-            ) { 
-                bullets.remove(i);
-                break;
-            }
-            }
-        }
+            if (bullet.checkCollisions(covers, enemies)) { bullets.remove(i); }
         }
     }
 
-    public void bullets_update(List<Cover> covers) {
-        check_collisions(covers);
+    public void bullets_update(List<Cover> covers, List<Enemy> enemies) {
+        checkCollisions(covers, enemies);
 
         if (shoot && !shot) {
             bullets.add(
-                new Bullet(gp, x + width / 2, y, bullets.size()));
+                new Bullet(gp, x + width / 2, y, false));
             shot = true;
             currentShootingStep = 0;
         }
@@ -100,9 +88,9 @@ public class Player extends Entity {
         }
     }
 
-    public void update(List<Cover> covers) {
+    public void update(List<Cover> covers, List<Enemy> enemies) {
         behavior();
-        bullets_update(covers);
+        bullets_update(covers, enemies);
     }
 
     @Override

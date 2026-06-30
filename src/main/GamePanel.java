@@ -13,12 +13,12 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import entity.Cover;
-import entity.Enemy;
 import entity.Player;
+import entity.Waves;
 
 public class GamePanel extends JPanel implements Runnable {
-    public final int SCREEN_WIDTH = 1080;
-    public final int SCREEN_HEIGHT = 720;
+    public final int SCREEN_WIDTH = 800;
+    public final int SCREEN_HEIGHT = 600;
 
     BufferedImage bgImg = null;
 
@@ -30,8 +30,11 @@ public class GamePanel extends JPanel implements Runnable {
     final int SCREEN_COVERS_BUFFER = 260;
     final int START_X_COVERS = SCREEN_COVERS_BUFFER / 2;
     List<Cover> covers = new ArrayList<Cover>();
-
-    Enemy testEnemy = new Enemy(this, START_X_COVERS, 0, 2, 50);
+    
+    // startY: 90
+    Waves wave = new Waves(
+        this, 0, 250, 35, 30, 10, 
+        50, 30, 60, 10);
 
     public void initBg() {
         try {
@@ -82,11 +85,13 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        for (Cover cover : covers) {
-            cover.update(player.bullets);
+        if (wave.height < covers.get(0).y) {
+            for (Cover cover : covers) {
+                cover.update(player.bullets);
+            }
         }
-
-        player.update(covers);
+        wave.update(player.bullets);
+        player.update(covers, wave.enemies);
     }
 
     public void paintComponent(Graphics g) {
@@ -101,7 +106,9 @@ public class GamePanel extends JPanel implements Runnable {
             cover.draw(g2);
         }
         player.draw(g2);
-        testEnemy.draw(g2);
+
+        if (wave.height >= covers.get(0).y) { wave.draw(g2); }
+        //testEnemy.draw(g2);
 
         g2.dispose();
     }
