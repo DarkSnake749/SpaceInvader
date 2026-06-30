@@ -9,10 +9,11 @@ import main.GamePanel;
 
 public class Waves extends Entity {
     GamePanel gp;
+    Random randomGen = new Random();
+
     public List<Enemy> enemies = new ArrayList<Enemy>();
     public List<Bullet> enemyBullets = new ArrayList<Bullet>();
-
-    Random randomGen = new Random();
+    public int score;
 
     int speedY;
 
@@ -73,6 +74,8 @@ public class Waves extends Entity {
 
         width *= stepX;
         height *= stepY;
+
+        score = 0;
     }
 
     private void loadImgs() {
@@ -90,6 +93,19 @@ public class Waves extends Entity {
         sprites[2][0] = sprite1;
         loadImage("/images/enemies/e3-2.png", 1);
         sprites[2][1] = sprite1;
+    }
+
+    private int scoreTables(int type) {
+        switch (type) {
+            case 0:
+                return 10;
+            case 1:
+                return 20;
+            case 2:
+                return 30;
+            default:
+                return 0;
+        }
     }
 
     public boolean needToShoot() {
@@ -147,7 +163,7 @@ public class Waves extends Entity {
                 enemy.y += speedY; 
             }
 
-            enemy.checkCollisions(bullets);
+            if (enemy.checkCollisions(bullets)) { score += scoreTables(enemy.type); }
         }
 
         updateBullets(covers);

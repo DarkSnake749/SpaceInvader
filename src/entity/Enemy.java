@@ -25,12 +25,13 @@ public class Enemy extends Entity {
         this.type = type;
     }
 
-    public void checkCollisions(List<Bullet> bullets) {
+    public boolean checkCollisions(List<Bullet> bullets) {
         for (Bullet bullet : bullets) {
             if (bullet.y >= y && bullet.y <= bottom() && 
                 bullet.x >= x && bullet.x <= right() ) 
-            { visible = false; }
+            { visible = false; return true; }
         }
+        return false;
     }
 
     public void draw(Graphics2D g2, BufferedImage img) {

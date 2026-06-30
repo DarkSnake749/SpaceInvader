@@ -3,6 +3,8 @@ package main;
 import java.util.*;
 
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,6 +22,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int SCREEN_WIDTH = 800;
     public final int SCREEN_HEIGHT = 600;
 
+    int score;
+
+    Font textFont;
     BufferedImage bgImg = null;
 
     KeyHandler keyH = new KeyHandler();
@@ -44,6 +49,19 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void initFont() {
+        try {
+            textFont = Font.createFont(
+                Font.TRUETYPE_FONT, 
+                Objects.requireNonNull( 
+                    getClass().getResourceAsStream("/font/sp.ttf"))
+            );
+            textFont = textFont.deriveFont(30f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void initCovers(int numOfCover) {
         final int STEP = SCREEN_WIDTH / numOfCover;
         for (int i = 0; i < numOfCover; i++) {
@@ -61,6 +79,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         initBg();
         initCovers(3);
+        initFont();
+
+        score = 0;
     }
 
     public void startGameThread() {
@@ -92,6 +113,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
         wave.update(player.bullets, covers);
         player.update(covers, wave.enemies);
+
+        score += wave.score;
+        wave.score = 0;
     }
 
     public void paintComponent(Graphics g) {
@@ -102,14 +126,19 @@ public class GamePanel extends JPanel implements Runnable {
             g2.drawImage(bgImg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
         }
 
+        // -----------------------------
         wave.draw(g2);
-        
         if (wave.height < covers.get(0).y) {
             for (Cover cover : covers) {
                 cover.draw(g2);
             }
         }
         player.draw(g2);
+        // -----------------------------
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(textFont);
+        g2.drawString("Score: " + score, 5, textFont.getSize() + 5);
 
         g2.dispose();
     }
