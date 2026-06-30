@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+
 import java.util.*;
 
 import main.GamePanel;
@@ -9,6 +10,9 @@ import main.GamePanel;
 public class Waves extends Entity {
     GamePanel gp;
     public List<Enemy> enemies = new ArrayList<Enemy>();
+    public List<Bullet> enemyBullets = new ArrayList<Bullet>();
+
+    Random randomGen = new Random();
 
     int speedY;
 
@@ -88,10 +92,30 @@ public class Waves extends Entity {
         sprites[2][1] = sprite1;
     }
 
-    public void update(List<Bullet> bullets) {
+    public boolean needToShoot() {
+        return randomGen.nextInt(401) == 0 ? true : false;
+    }
+
+    public int randomIdx() {
+        return randomGen.nextInt(enemies.size());
+    }
+
+    public void updateBullets(List<Cover> covers) {
+        for (int i = 0; i < enemyBullets.size(); i++) {
+            Bullet eBullet = enemyBullets.get(i);
+            if (!eBullet.visible) { enemyBullets.remove(i); }
+            if (eBullet.checkCollisions(covers, enemies)) { enemyBullets.remove(i); continue; }
+            eBullet.update();
+        }
+    }
+
+    public void update(List<Bullet> bullets, List<Cover> covers) {
         int oldMoveDir = moveDir;
         boolean yMove = false;
         boolean xMove = false;
+
+        boolean needShot = needToShoot();
+        int shootIdx = needShot ? randomIdx() : 0;
 
         currentMoveStep++;
         if (currentMoveStep >= moveMinStep) {
@@ -110,7 +134,13 @@ public class Waves extends Entity {
 
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = enemies.get(i);
-            if (!enemy.visible) { enemies.remove(i); }
+            if (!enemy.visible) { 
+                enemies.remove(i); 
+                continue;
+            }
+
+            if (needShot && i == shootIdx) { enemyBullets.add(
+                new Bullet(gp, enemy.x + enemy.width / 2, enemy.y + enemy.height, true)); }
 
             if (xMove) { enemy.x += speed * oldMoveDir; }
             if (yMove) { 
@@ -119,14 +149,18 @@ public class Waves extends Entity {
 
             enemy.checkCollisions(bullets);
         }
+
+        updateBullets(covers);
     }
 
     @Override
     public void draw(Graphics2D g2) {
         for (Enemy enemy : enemies) {
             if (!enemy.visible) { continue; }
-            //System.out.println(moveMinStep);
             enemy.draw(g2, sprites[enemy.type][spriteIdx]);
+        }
+        for (Bullet eBullet : enemyBullets) {
+            eBullet.draw(g2);
         }
     }
 }

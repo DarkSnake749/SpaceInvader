@@ -34,7 +34,7 @@ public class Cover extends Entity {
         }
     }
 
-    public void update(List<Bullet> bullets) {
+    public void update(List<Bullet> bullets, List<Bullet> enemyBullets) {
         for (int i = 0; i < blockers.size(); i++) {
             Blocker blocker = blockers.get(i);
 
@@ -44,6 +44,7 @@ public class Cover extends Entity {
             }
 
             blocker.check_collisions(bullets);
+            blocker.check_collisions(enemyBullets);
         }
     }
 

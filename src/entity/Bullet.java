@@ -9,6 +9,8 @@ public class Bullet extends Entity {
     GamePanel gp;
     public boolean enemyType;
 
+    boolean visible = true;
+
     public Bullet(GamePanel gp, int startX, int startY, boolean enemyType) {
         this.gp = gp;
         
@@ -23,7 +25,7 @@ public class Bullet extends Entity {
     public void init() {
         speed = 6;
 
-        if (enemyType) {loadImage("/images/enemies/e-laser.png", height);}
+        if (enemyType) {loadImage("/images/enemies/e-laser.png", 1);}
         else { loadImage("/images/laser.png", 1); }
     }
 
@@ -59,8 +61,13 @@ public class Bullet extends Entity {
     }
 
     public void update() {
+        if (y < 0 || y > gp.SCREEN_HEIGHT) { 
+            visible = false; 
+            return;
+        }
+
         if (enemyType) {
-            y += speed;
+            y += speed / 2;
             return;
         }
         y -= speed;
@@ -68,6 +75,7 @@ public class Bullet extends Entity {
 
     @Override
     public void draw(Graphics2D g2) {
+        if (!visible) { return; }
         g2.drawImage(sprite1, null, x, y);
     }
 }

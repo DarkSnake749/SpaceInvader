@@ -27,14 +27,14 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;
     Player player = new Player(this, keyH);
 
-    final int SCREEN_COVERS_BUFFER = 260;
+    final int SCREEN_COVERS_BUFFER = 180;
     final int START_X_COVERS = SCREEN_COVERS_BUFFER / 2;
     List<Cover> covers = new ArrayList<Cover>();
     
     // startY: 90
     Waves wave = new Waves(
-        this, 0, 250, 35, 30, 10, 
-        50, 30, 60, 10);
+        this, 1, 90, 35, 30, 10, 
+        5, 30, 60, 10);
 
     public void initBg() {
         try {
@@ -87,10 +87,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (wave.height < covers.get(0).y) {
             for (Cover cover : covers) {
-                cover.update(player.bullets);
+                cover.update(player.bullets, wave.enemyBullets);
             }
         }
-        wave.update(player.bullets);
+        wave.update(player.bullets, covers);
         player.update(covers, wave.enemies);
     }
 
@@ -102,13 +102,14 @@ public class GamePanel extends JPanel implements Runnable {
             g2.drawImage(bgImg, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, null);
         }
 
-        for (Cover cover : covers) {
-            cover.draw(g2);
+        wave.draw(g2);
+        
+        if (wave.height < covers.get(0).y) {
+            for (Cover cover : covers) {
+                cover.draw(g2);
+            }
         }
         player.draw(g2);
-
-        if (wave.height >= covers.get(0).y) { wave.draw(g2); }
-        //testEnemy.draw(g2);
 
         g2.dispose();
     }
